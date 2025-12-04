@@ -1,0 +1,32 @@
+model:
+  name: "SwitchNet-v4"
+  architecture: "transformer_hybrid"
+  hidden_dim: 512
+  layers: 12
+  heads: 8
+  dropout: 0.1
+  activation: "gelu"
+
+training:
+  batch_size: 64
+  learning_rate: 3e-4
+  optimizer: "AdamW"
+  weight_decay: 0.01
+  scheduler: "cosine_annealing_warm_restarts"
+  epochs: 100
+  gradient_clip_val: 1.0
+  mixed_precision: true
+
+data:
+  source: "s3://switch-protocol-datalake/v2/processed"
+  validation_split: 0.15
+  num_workers: 8
+  prefetch_factor: 2
+  normalization:
+    method: "z-score"
+    stats_file: "configs/stats_v2.json"
+
+bayesian_opt:
+  n_iter: 50
+  acquisition_function: "expected_improvement"
+  kappa: 2.576
